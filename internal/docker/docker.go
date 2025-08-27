@@ -24,7 +24,7 @@ import (
 
 const userAgent = "OpenTelemetry-Collector Docker Stats Receiver/v0.0.1"
 
-var minimumRequiredDockerAPIVersion = MustNewAPIVersion("1.22")
+var minimumRequiredDockerAPIVersion = MustNewAPIVersion("1.24")
 
 // Container is client.ContainerInspect() response container
 // stats and translated environment string map for potential labels.
@@ -54,9 +54,13 @@ func NewDockerClient(config *Config, logger *zap.Logger, opts ...docker.Opt) (*C
 			return nil, err
 		}
 	}
+	endpoint := docker.DefaultDockerHost
+	if config.Endpoint != "" {
+		endpoint = config.Endpoint
+	}
 	client, err := docker.NewClientWithOpts(
 		append([]docker.Opt{
-			docker.WithHost(config.Endpoint),
+			docker.WithHost(endpoint),
 			docker.WithVersion(version),
 			docker.WithHTTPHeaders(map[string]string{"User-Agent": userAgent}),
 		}, opts...)...,

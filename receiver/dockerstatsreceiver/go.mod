@@ -132,3 +132,5 @@ retract (
 replace github.com/open-telemetry/opentelemetry-collector-contrib/pkg/golden => ../../pkg/golden
 
 replace github.com/open-telemetry/opentelemetry-collector-contrib/internal/coreinternal => ../../internal/coreinternal
+
+replace github.com/testcontainers/testcontainers-go => github.com/olljanat/testcontainers-go v0.38.1-0.20250827111359-bd8be10918e8

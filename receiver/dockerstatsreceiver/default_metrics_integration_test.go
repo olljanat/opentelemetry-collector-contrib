@@ -1,12 +1,11 @@
 // Copyright The OpenTelemetry Authors
 // SPDX-License-Identifier: Apache-2.0
 
-//go:build !windows
-
 package dockerstatsreceiver
 
 import (
 	"os"
+	"runtime"
 	"testing"
 
 	"github.com/testcontainers/testcontainers-go"
@@ -20,12 +19,18 @@ func TestIntegration(t *testing.T) {
 		t.Skip("Skipping test on GH runners: until flakiness is investigated")
 	}
 
+	// FixMe: https://github.com/testcontainers/testcontainers-go/issues/948
+	image := "alpine:latest"
+	if runtime.GOOS == "windows" {
+		image = "mcr.microsoft.com/windows/nanoserver:ltsc2025"
+	}
+
 	// Start a docker container to ensure container metrics are available
 	scraperinttest.NewIntegrationTest(
 		NewFactory(),
 		scraperinttest.WithContainerRequest(
 			testcontainers.ContainerRequest{
-				Image: "alpine:latest",
+				Image: image,
 				Name:  "dockerstatsreceiver-test",
 			},
 		),
